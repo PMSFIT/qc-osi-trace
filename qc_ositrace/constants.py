@@ -1,0 +1,2 @@
+BUNDLE_NAME = "osiBundle"
+BUNDLE_VERSION = "0.1.0"

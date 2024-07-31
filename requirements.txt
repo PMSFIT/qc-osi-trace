@@ -1,0 +1,2 @@
+qc_baselib @ git+https://github.com/asam-ev/qc-baselib-py@develop
+open-simulation-interface @ git+https://github.com/OpenSimulationInterface/open-simulation-interface@v3.7.0
