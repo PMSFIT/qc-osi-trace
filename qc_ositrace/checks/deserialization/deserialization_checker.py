@@ -71,6 +71,10 @@ def run_checks(config: Configuration, result: Result) -> None:
         rule_full_name="deserialization.expected_version",
     )
 
+    logging.info("Executing deserialization.expected_type check")
+    logging.info("Executing deserialization.version_is_set check")
+    logging.info("Executing deserialization.expected_version check")
+
     for message in trace:
         if not type(message) is expected_type:
             issue_id = result.register_issue(

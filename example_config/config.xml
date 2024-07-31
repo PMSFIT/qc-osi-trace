@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Config>
+
+    <Param name="osiFile" value="tests/data/deserialization_expected_version/deserialization_expected_version_360.osi" />
+    <Param name="osiType" value="SensorView" />
+    <Param name="osiVersion" value="3.6.0" />
+
+    <CheckerBundle application="osiBundle">
+        <Param name="resultFile" value="osi_bundle_report.xqar" />
+        <Checker checkerId="validator_osi" maxLevel="1" minLevel="3" />
+    </CheckerBundle>
+
+    <ReportModule application="TextReport">
+        <Param name="strInputFile" value="Result.xqar" />
+        <Param name="strReportFile" value="Report.txt" />
+    </ReportModule>
+
+</Config>

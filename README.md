@@ -19,9 +19,10 @@ The checker can be used as a Python script:
 ```
 python main.py --help
 
-usage: QC OpenDrive Checker [-h] (-d | -c CONFIG_PATH)
+usage: QC OSI Trace Checker [-h] (-d | -c CONFIG_PATH)
 
-This is a collection of scripts for checking validity of OpenDrive (.xodr) files.
+This is a collection of scripts for checking validity of OSI Trace (.osi)
+files.
 
 options:
   -h, --help            show this help message and exit
@@ -37,23 +38,27 @@ options:
 ```
 $ python main.py \
     -c example_config/config.xml
-2024-06-05 18:29:23,551 - Initializing checks
-2024-06-05 18:29:23,551 - Executing semantic checks
-2024-06-05 18:29:23,552 - Executing road.lane.access.no_mix_of_deny_or_allow check
-2024-06-05 18:29:23,552 - Issues found - 0
-2024-06-05 18:29:23,552 - Done
+2024-07-31 16:09:01,186 - Initializing checks
+2024-07-31 16:09:01,187 - Executing deserialization checks
+2024-07-31 16:09:01,188 - Executing deserialization.expected_type check
+2024-07-31 16:09:01,188 - Executing deserialization.version_is_set check
+2024-07-31 16:09:01,188 - Executing deserialization.expected_version check
+2024-07-31 16:09:01,191 - Issues found - 0
+2024-07-31 16:09:01,192 - Done
 ```
 
 - Issues found on file
 
 ```
-python main.py \
-    -c example_config/config.xml
-2024-06-05 18:29:53,950 - Initializing checks
-2024-06-05 18:29:53,950 - Executing semantic checks
-2024-06-05 18:29:53,951 - Executing road.lane.access.no_mix_of_deny_or_allow check
-2024-06-05 18:29:53,951 - Issues found - 1
-2024-06-05 18:29:53,951 - Done
+$ python main.py \
+    -c example_config/config-errors.xml
+2024-07-31 16:15:05,779 - Initializing checks
+2024-07-31 16:15:05,780 - Executing deserialization checks
+2024-07-31 16:15:05,781 - Executing deserialization.expected_type check
+2024-07-31 16:15:05,781 - Executing deserialization.version_is_set check
+2024-07-31 16:15:05,781 - Executing deserialization.expected_version check
+2024-07-31 16:15:05,796 - Issues found - 547
+2024-07-31 16:15:05,806 - Done
 ```
 
 ## Tests
@@ -76,19 +81,18 @@ python -m pytest -vv
 They should output something similar to:
 
 ```
-===================== test session starts =====================
-platform linux -- Python 3.11.9, pytest-8.2.2, pluggy-1.5.0 -- /home/tripel/asam/qc-osi-trace/.venv/bin/python
+============================= test session starts =============================
+platform win32 -- Python 3.10.4, pytest-8.2.2, pluggy-1.5.0 -- C:\Users\pmai\src\ASAM\qc-osi-trace\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: /home/tripel/asam/qc-osi-trace
-configfile: pytest.ini
-collected 4 items
+rootdir: C:\Users\pmai\src\ASAM\qc-osi-trace
+collecting ... collected 4 items
 
-tests/test_semantic_checks.py::test_road_lane_access_no_mix_of_deny_or_allow[17_invalid] PASSED                                                                                     [ 25%]
-tests/test_semantic_checks.py::test_road_lane_access_no_mix_of_deny_or_allow[17_valid] PASSED                                                                                       [ 50%]
-tests/test_semantic_checks.py::test_road_lane_access_no_mix_of_deny_or_allow[18_invalid] PASSED                                                                                     [ 75%]
-tests/test_semantic_checks.py::test_road_lane_access_no_mix_of_deny_or_allow[18_valid] PASSED                                                                                       [100%]
+tests/test_deserialization_checks.py::test_deserialization_version_is_set_examples[invalid-SensorView-547] PASSED [ 25%]
+tests/test_deserialization_checks.py::test_deserialization_version_is_set_examples[valid-SensorView-0] PASSED [ 50%]
+tests/test_deserialization_checks.py::test_deserialization_expected_version[360-SensorView-3.5.0-547] PASSED [ 75%]
+tests/test_deserialization_checks.py::test_deserialization_expected_version[360-SensorView-3.6.0-0] PASSED [100%]
 
-===================== 4 passed in 0.24s =====================
+============================== 4 passed in 0.39s ==============================
 ```
 
 You can check more options for pytest at its [own documentation](https://docs.pytest.org/).
