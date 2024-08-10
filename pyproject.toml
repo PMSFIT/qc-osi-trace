@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "qc-osi-trace"
+version = "0.1.0"
+description = "This project implements the OSI Trace Checker for the ASAM Quality Checker project."
+authors = ["Pierre R. Mai <pmai@pmsf.de>"]
+license = "MPL-2.0"
+readme = "README.md"
+repository = "https://github.com/PMSFIT/qc-osi-trace"
+packages = [
+       { include = "qc_ositrace" },
+   ]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+qc-baselib = {git = "https://github.com/asam-ev/qc-baselib-py.git", rev = "main"}
+open-simulation-interface = {git = "https://github.com/OpenSimulationInterface/open-simulation-interface.git", rev = "v3.7.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+black = "^24.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

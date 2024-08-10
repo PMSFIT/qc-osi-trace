@@ -4,7 +4,14 @@ This project implements the OSI Trace Checker for the ASAM Quality Checker proje
 
 ## Installation
 
+There are two options of usage of the project:
+
+1. Default python on the machine
+2. [Poetry](https://python-poetry.org/)
+
 To install the project, run:
+
+**Default python**
 
 ```
 pip install -r requirements.txt
@@ -12,9 +19,36 @@ pip install -r requirements.txt
 
 This will install the needed dependencies to your local Python.
 
+**Poetry**
+
+```
+poetry install
+```
+
+## Installation as library
+
+It is possible to install this project as a Python module to be used in third
+party implementations. For that, run:
+
+```
+pip install qc_ositrace @ git+https://github.com/PMSFIT/qc-osi-trace@main
+```
+
+**Note**: To install from different sources, you can replace `@main` with
+your desired target. For example, `develop` branch as `@develop`.
+
+After installation, the usage is similar to the one expressed in the
+[`main.py`](./main.py) script:
+
+```Python3
+from qc_ositrace.checks.deserialization import deserialization_checker
+```
+
 ## Usage
 
 The checker can be used as a Python script:
+
+**Default python**
 
 ```
 python main.py --help
@@ -28,7 +62,22 @@ options:
   -h, --help            show this help message and exit
   -d, --default_config
   -c CONFIG_PATH, --config_path CONFIG_PATH
+```
 
+**Poetry**
+
+```
+poetry run python main.py --help
+
+usage: QC OSI Trace Checker [-h] (-d | -c CONFIG_PATH)
+
+This is a collection of scripts for checking validity of OSI Trace (.osi)
+files.
+
+options:
+  -h, --help            show this help message and exit
+  -d, --default_config
+  -c CONFIG_PATH, --config_path CONFIG_PATH
 ```
 
 ### Example
@@ -66,16 +115,32 @@ $ python main.py \
 To run the tests, you need to have installed the main dependencies mentioned
 at [Instalation](#installation).
 
-Install Python tests and development dependencies:
+**Install Python tests and development dependencies:**
+
+**Default python**
 
 ```
 pip install -r requirements-tests.txt
 ```
 
-Execute tests:
+**Poetry**
+
+```
+poetry install --with dev
+```
+
+**Execute tests:**
+
+**Default python**
 
 ```
 python -m pytest -vv
+```
+
+**Poetry**
+
+```
+poetry run pytest -vv
 ```
 
 They should output something similar to:
@@ -102,8 +167,16 @@ You can check more options for pytest at its [own documentation](https://docs.py
 For contributing, you need to install the development requirements besides the
 test and installation requirements, for that run:
 
+Default machine python:
+
 ```
 pip install -r requirements-dev.txt
+```
+
+Using poetry:
+
+```
+poetry install --with dev
 ```
 
 You need to have pre-commit installed and install the hooks:
