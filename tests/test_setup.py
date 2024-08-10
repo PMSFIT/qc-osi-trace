@@ -18,7 +18,7 @@ def create_test_config(
     target_file_version: Optional[str] = None,
 ):
     test_config = Configuration()
-    test_config.set_config_param(name="osiFile", value=target_file_path)
+    test_config.set_config_param(name="InputFile", value=target_file_path)
     test_config.set_config_param(name="osiType", value=target_file_type)
     if target_file_version is not None:
         test_config.set_config_param(name="osiVersion", value=target_file_version)
