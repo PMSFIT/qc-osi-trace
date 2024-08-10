@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from qc_baselib import Configuration, Result
+from qc_baselib.models.common import ParamType
 
 from qc_ositrace import constants
 from qc_ositrace.checks.deserialization import deserialization_checker
@@ -42,6 +43,12 @@ def main():
             summary="",
         )
         result.set_result_version(version=constants.BUNDLE_VERSION)
+
+        input_file_path = config.get_config_param("InputFile")
+        input_param = ParamType(name="InputFile", value=input_file_path)
+        result.get_checker_bundle_result(constants.BUNDLE_NAME).params.append(
+            input_param
+        )
 
         deserialization_checker.run_checks(config=config, result=result)
 
