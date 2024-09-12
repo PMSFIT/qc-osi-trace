@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Config>
 
-    <Param name="osiFile" value="tests/data/deserialization_expected_version/deserialization_expected_version_360.osi" />
+    <Param name="InputFile" value="tests/data/deserialization_expected_version/deserialization_expected_version_360.osi" />
     <Param name="osiType" value="SensorView" />
     <Param name="osiVersion" value="3.6.0" />
 
