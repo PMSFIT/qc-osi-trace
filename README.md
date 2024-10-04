@@ -2,56 +2,45 @@
 
 This project implements the OSI Trace Checker for the ASAM Quality Checker project.
 
-## Installation
+- [qc-osi-trace](#qc-osi-trace)
+  - [Installation and usage](#installation-and-usage)
+    - [Installation using pip](#installation-using-pip)
+      - [To use as a library](#to-use-as-a-library)
+      - [To use as an application](#to-use-as-an-application)
+    - [Installation from source](#installation-from-source)
+    - [Example output](#example-output)
+  - [Tests](#tests)
+    - [Execute tests](#execute-tests)
+  - [Contributing](#contributing)
 
-There are two options of usage of the project:
+## Installation and usage
 
-1. Default python on the machine
-2. [Poetry](https://python-poetry.org/)
+qc-osi-trace can be installed using pip or from source.
 
-To install the project, run:
+### Installation using pip
 
-**Default python**
+qc-osi-trace can be installed using pip, so that it can be used as a library or as an application.
 
-```
-pip install -r requirements.txt
-```
-
-This will install the needed dependencies to your local Python.
-
-**Poetry**
-
-```
-poetry install
-```
-
-## Installation as library
-
-It is possible to install this project as a Python module to be used in third
-party implementations. For that, run:
-
-```
-pip install qc_ositrace @ git+https://github.com/PMSFIT/qc-osi-trace@main
+```bash
+pip install qc-osi-trace@git+https://github.com/PMSFIT/qc-osi-trace@main
 ```
 
 **Note**: To install from different sources, you can replace `@main` with
 your desired target. For example, `develop` branch as `@develop`.
 
+#### To use as a library
+
 After installation, the usage is similar to the one expressed in the
-[`main.py`](./main.py) script:
+[`main.py`](./qc_ositrace/main.py) script:
 
 ```Python3
 from qc_ositrace.checks.deserialization import deserialization_checker
 ```
 
-## Usage
-
-The checker can be used as a Python script:
-
-**Default python**
+#### To use as an application
 
 ```
-python main.py --help
+qc_ositrace --help
 
 usage: QC OSI Trace Checker [-h] (-d | -c CONFIG_PATH)
 
@@ -64,10 +53,20 @@ options:
   -c CONFIG_PATH, --config_path CONFIG_PATH
 ```
 
-**Poetry**
+### Installation from source
 
+The project can be installed from source using [Poetry](https://python-poetry.org/).
+
+```bash
+poetry install
 ```
-poetry run python main.py --help
+
+After installing from source, the usage is the same as shown above.
+
+It is also possible to execute the qc_ositrace application using Poetry.
+
+```bash
+poetry run qc_ositrace --help
 
 usage: QC OSI Trace Checker [-h] (-d | -c CONFIG_PATH)
 
@@ -80,13 +79,12 @@ options:
   -c CONFIG_PATH, --config_path CONFIG_PATH
 ```
 
-### Example
+### Example output
 
 - No issues found
 
-```
-$ python main.py \
-    -c example_config/config.xml
+```bash
+$ qc_ositrace -c example_config/config.xml
 2024-07-31 16:09:01,186 - Initializing checks
 2024-07-31 16:09:01,187 - Executing deserialization checks
 2024-07-31 16:09:01,188 - Executing deserialization.expected_type check
@@ -96,11 +94,10 @@ $ python main.py \
 2024-07-31 16:09:01,192 - Done
 ```
 
-- Issues found on file
+- Issues found
 
-```
-$ python main.py \
-    -c example_config/config-errors.xml
+```bash
+$ qc_ositrace -c example_config/config-errors.xml
 2024-07-31 16:15:05,779 - Initializing checks
 2024-07-31 16:15:05,780 - Executing deserialization checks
 2024-07-31 16:15:05,781 - Executing deserialization.expected_type check
@@ -112,40 +109,21 @@ $ python main.py \
 
 ## Tests
 
-To run the tests, you need to have installed the main dependencies mentioned
-at [Instalation](#installation).
+To run the tests, you need to install the extra test dependency.
 
-**Install Python tests and development dependencies:**
-
-**Default python**
-
-```
-pip install -r requirements-tests.txt
-```
-
-**Poetry**
-
-```
+```bash
 poetry install --with dev
 ```
 
-**Execute tests:**
+### Execute tests
 
-**Default python**
-
-```
-python -m pytest -vv
-```
-
-**Poetry**
-
-```
+```bash
 poetry run pytest -vv
 ```
 
 They should output something similar to:
 
-```
+```bash
 ============================= test session starts =============================
 platform win32 -- Python 3.10.4, pytest-8.2.2, pluggy-1.5.0 -- C:\Users\pmai\src\ASAM\qc-osi-trace\.venv\Scripts\python.exe
 cachedir: .pytest_cache
@@ -164,18 +142,10 @@ You can check more options for pytest at its [own documentation](https://docs.py
 
 ## Contributing
 
-For contributing, you need to install the development requirements besides the
-test and installation requirements, for that run:
+For contributing, you need to install the development requirements.
+For that run:
 
-Default machine python:
-
-```
-pip install -r requirements-dev.txt
-```
-
-Using poetry:
-
-```
+```bash
 poetry install --with dev
 ```
 

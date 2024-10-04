@@ -3,7 +3,7 @@ import sys
 
 from typing import List, Optional
 
-import main
+import qc_ositrace.main as main
 
 from qc_ositrace import constants
 from qc_baselib import Configuration, Result, IssueSeverity

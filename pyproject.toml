@@ -19,6 +19,9 @@ open-simulation-interface = {git = "https://github.com/OpenSimulationInterface/o
 pytest = "^8.2.2"
 black = "^24.4.2"
 
+[tool.poetry.scripts]
+qc_ositrace = 'qc_ositrace.main:main'
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
