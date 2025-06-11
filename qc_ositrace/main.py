@@ -6,6 +6,7 @@ from qc_baselib.models.common import ParamType
 
 from qc_ositrace import constants
 from qc_ositrace.checks.deserialization import deserialization_checker
+from qc_ositrace.checks.osirules import osirules_checker
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
@@ -51,6 +52,7 @@ def main():
         )
 
         deserialization_checker.run_checks(config=config, result=result)
+        osirules_checker.run_checks(config=config, result=result)
 
         result.write_to_file(
             config.get_checker_bundle_param(
