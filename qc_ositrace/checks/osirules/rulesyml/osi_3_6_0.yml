@@ -1,0 +1,1239 @@
+Vector3d:
+  x:
+  y:
+  z:
+Vector2d:
+  x:
+  y:
+Timestamp:
+  seconds:
+    - is_greater_than_or_equal_to: 0
+  nanos:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 999999999
+Dimension3d:
+  length:
+    - is_greater_than_or_equal_to: 0
+  width:
+    - is_greater_than_or_equal_to: 0
+  height:
+    - is_greater_than_or_equal_to: 0
+Orientation3d:
+  roll:
+  pitch:
+  yaw:
+Identifier:
+  value:
+    - is_greater_than_or_equal_to: 0
+ExternalReference:
+  reference:
+  identifier:
+MountingPosition:
+  position:
+  orientation:
+Spherical3d:
+  distance:
+    - is_greater_than_or_equal_to: 0
+  azimuth:
+  elevation:
+LogicalLaneAssignment:
+  assigned_lane_id:
+    - refers_to: LogicalLane
+  s_position:
+  t_position:
+  angle_to_lane:
+BaseStationary:
+  dimension:
+  position:
+  orientation:
+  base_polygon:
+BaseMoving:
+  dimension:
+  position:
+  orientation:
+  velocity:
+  acceleration:
+  orientation_rate:
+  orientation_acceleration:
+  base_polygon:
+StatePoint:
+  timestamp:
+  position:
+  orientation:
+WavelengthData:
+  start:
+  end:
+  samples_number:
+SpatialSignalStrength:
+  horizontal_angle:
+  vertical_angle:
+  signal_strength:
+ColorDescription:
+  grey:
+  rgb:
+  rgbir:
+  hsv:
+  luv:
+  cmyk:
+ColorGrey:
+  grey:
+ColorRGB:
+  red:
+  green:
+  blue:
+ColorRGBIR:
+  red:
+  green:
+  blue:
+  infrared:
+ColorHSV:
+  hue:
+  saturation:
+  value:
+ColorLUV:
+  luminance:
+  u:
+  v:
+ColorCMYK:
+  cyan:
+  magenta:
+  yellow:
+  key:
+Pedalry:
+  pedal_position_acceleration:
+  pedal_position_brake:
+  pedal_position_clutch:
+VehicleSteeringWheel:
+  angle:
+  angular_speed:
+  torque:
+GeodeticPosition:
+  longitude:
+  latitude:
+  altitude:
+KeyValuePair:
+  key:
+  value:
+SensorDataSeries:
+  sensor_data:
+SensorDataSeriesList:
+  sensor:
+DetectedLane:
+  header:
+  candidate:
+  CandidateLane:
+    probability:
+      - is_less_than_or_equal_to: 1
+      - is_greater_than_or_equal_to: 0
+    classification:
+DetectedLaneBoundary:
+  header:
+  candidate:
+  boundary_line:
+  boundary_line_rmse:
+  boundary_line_confidences:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  color_description:
+  CandidateLaneBoundary:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    classification:
+DetectedItemHeader:
+  tracking_id:
+  ground_truth_id:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  age:
+  measurement_state:
+  sensor_id:
+DetectedStationaryObject:
+  header:
+  base:
+  base_rmse:
+  candidate:
+  color_description:
+  radar_specifics:
+  lidar_specifics:
+  camera_specifics:
+  ultrasonic_specifics:
+  CandidateStationaryObject:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    classification:
+DetectedMovingObject:
+  header:
+  base:
+  base_rmse:
+  reference_point:
+  movement_state:
+  percentage_side_lane_left:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  percentage_side_lane_right:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  candidate:
+  color_description:
+  radar_specifics:
+  lidar_specifics:
+  camera_specifics:
+  ultrasonic_specifics:
+  CandidateMovingObject:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    type:
+    vehicle_classification:
+    head_pose:
+    upper_body_pose:
+DetectedOccupant:
+  header:
+  candidate:
+  CandidateOccupant:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    classification:
+DetectedRoadMarking:
+  header:
+  base:
+  base_rmse:
+  candidate:
+  color_description:
+  CandidateRoadMarking:
+    probability:
+      - is_less_than_or_equal_to: 1
+      - is_greater_than_or_equal_to: 0
+    classification:
+DetectedTrafficLight:
+  header:
+  base:
+  base_rmse:
+  candidate:
+  color_description:
+  CandidateTrafficLight:
+    probability:
+      - is_less_than_or_equal_to: 1
+      - is_greater_than_or_equal_to: 0
+    classification:
+DetectedTrafficSign:
+  header:
+  main_sign:
+  supplementary_sign:
+  DetectedMainSign:
+    candidate:
+    base:
+    base_rmse:
+    geometry:
+    CandidateMainSign:
+      probability:
+        - is_less_than_or_equal_to: 1
+        - is_greater_than_or_equal_to: 0
+      classification:
+  DetectedSupplementarySign:
+    candidate:
+    base:
+    base_rmse:
+    CandidateSupplementarySign:
+      probability:
+        - is_less_than_or_equal_to: 1
+        - is_greater_than_or_equal_to: 0
+      classification:
+EnvironmentalConditions:
+  ambient_illumination:
+  time_of_day:
+  unix_timestamp:
+  atmospheric_pressure:
+    - is_greater_than_or_equal_to: 80000
+    - is_less_than_or_equal_to: 120000
+  temperature:
+    - is_greater_than_or_equal_to: 170
+    - is_less_than_or_equal_to: 340
+  relative_humidity:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  precipitation:
+  fog:
+  source_reference:
+  clouds:
+  wind:
+  sun:
+  TimeOfDay:
+    seconds_since_midnight:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than: 86400
+  CloudLayer:
+    fractional_cloud_cover:
+  Wind:
+    origin_direction:
+    speed:
+      - is_greater_than_or_equal_to: 0
+  Sun:
+    azimuth:
+    elevation:
+    intensity:
+      - is_greater_than_or_equal_to: 0
+FeatureData:
+  version:
+  radar_sensor:
+  lidar_sensor:
+  ultrasonic_sensor:
+  camera_sensor:
+SensorDetectionHeader:
+  measurement_time:
+  cycle_counter:
+    - is_greater_than_or_equal_to: 0
+  mounting_position:
+  mounting_position_rmse:
+  data_qualifier:
+  number_of_valid_detections:
+    - is_greater_than_or_equal_to: 0
+  sensor_id:
+  extended_qualifier:
+RadarDetectionData:
+  header:
+  detection:
+RadarDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  position:
+  position_rmse:
+  radial_velocity:
+  radial_velocity_rmse:
+    - is_greater_than_or_equal_to: 0
+  rcs:
+  snr:
+  point_target_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  ambiguity_id:
+  classification:
+LidarDetectionData:
+  header:
+  detection:
+LidarDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  position:
+  position_rmse:
+  height:
+    - is_greater_than_or_equal_to: 0
+  height_rmse:
+    - is_greater_than_or_equal_to: 0
+  intensity:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  free_space_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  classification:
+  reflectivity:
+  echo_pulse_width:
+    - is_greater_than_or_equal_to: 0
+  radial_velocity:
+UltrasonicDetectionSpecificHeader:
+  max_range:
+  number_of_valid_indirect_detections:
+UltrasonicDetectionData:
+  header:
+  specific_header:
+  detection:
+  indirect_detection:
+UltrasonicDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  distance:
+    - is_greater_than_or_equal_to: 0
+UltrasonicIndirectDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  ellipsoid_radial:
+  ellipsoid_axial:
+  receiver_id:
+  receiver_origin:
+CameraDetectionSpecificHeader:
+  number_of_valid_points:
+    - is_greater_than_or_equal_to: 0
+CameraDetectionData:
+  header:
+  specific_header:
+  detection:
+  point:
+CameraDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  time_difference:
+  image_shape_type:
+  shape_classification_background:
+  shape_classification_foreground:
+  shape_classification_flat:
+  shape_classification_upright:
+  shape_classification_ground:
+  shape_classification_sky:
+  shape_classification_vegetation:
+  shape_classification_road:
+  shape_classification_non_driving_lane:
+  shape_classification_non_road:
+  shape_classification_stationary_object:
+  shape_classification_moving_object:
+  shape_classification_landmark:
+  shape_classification_traffic_sign:
+  shape_classification_traffic_light:
+  shape_classification_road_marking:
+  shape_classification_vehicle:
+  shape_classification_pedestrian:
+  shape_classification_animal:
+  shape_classification_pedestrian_front:
+  shape_classification_pedestrian_side:
+  shape_classification_pedestrian_rear:
+  shape_classification_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  color:
+  color_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  ambiguity_id:
+  first_point_index:
+  number_of_points:
+    - is_greater_than_or_equal_to: 0
+  color_description:
+CameraPoint:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  point:
+  point_rmse:
+GroundTruth:
+  version:
+  timestamp:
+  host_vehicle_id:
+    - refers_to: MovingObject
+  stationary_object:
+  moving_object:
+  traffic_sign:
+  traffic_light:
+  road_marking:
+  lane_boundary:
+  lane:
+  occupant:
+  environmental_conditions:
+  country_code:
+    - is_iso_country_code:
+  proj_string:
+  map_reference:
+  model_reference:
+  reference_line:
+  logical_lane_boundary:
+  logical_lane:
+HostVehicleData:
+  version:
+  timestamp:
+  host_vehicle_id:
+  location:
+  location_rmse:
+  vehicle_basics:
+  vehicle_powertrain:
+  vehicle_brake_system:
+  vehicle_steering:
+  vehicle_wheels:
+  vehicle_localization:
+  vehicle_automated_driving_function:
+  vehicle_motion:
+  VehicleBasics:
+    curb_weight:
+    operating_state:
+  VehiclePowertrain:
+    pedal_position_acceleration:
+    pedal_position_clutch:
+    gear_transmission:
+    motor:
+    Motor:
+      type:
+      rpm:
+      torque:
+  VehicleBrakeSystem:
+    pedal_position_brake:
+  VehicleSteering:
+    vehicle_steering_wheel:
+  VehicleWheels:
+    wheel_data:
+    WheelData:
+      axle:
+      index:
+      rotation_rate:
+      slip:
+  VehicleLocalization:
+    position:
+    orientation:
+    geodetic_position:
+  VehicleMotion:
+    position:
+    orientation:
+    velocity:
+    orientation_rate:
+    acceleration:
+    current_curvature:
+  VehicleAutomatedDrivingFunction:
+    name:
+    custom_name:
+    state:
+    custom_state:
+    driver_override:
+    custom_detail:
+    DriverOverride:
+      active:
+      override_reason:
+Lane:
+  id:
+    - is_globally_unique:
+  classification:
+  source_reference:
+  Classification:
+    type:
+    is_host_vehicle_lane:
+    centerline:
+    centerline_is_driving_direction:
+    left_adjacent_lane_id:
+      - check_if:
+        - is_different_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    right_adjacent_lane_id:
+      - check_if:
+        - is_different_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    lane_pairing:
+    right_lane_boundary_id:
+      - check_if:
+        - is_different_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    left_lane_boundary_id:
+      - check_if:
+        - is_different_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    free_lane_boundary_id:
+      - check_if:
+        - is_different_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    road_condition:
+    subtype:
+    RoadCondition:
+      surface_temperature:
+        - is_greater_than_or_equal_to: 0
+      surface_water_film:
+        - is_greater_than_or_equal_to: 0
+      surface_freezing_point:
+        - is_greater_than_or_equal_to: 0
+      surface_ice:
+        - is_greater_than_or_equal_to: 0
+      surface_roughness:
+        - is_greater_than_or_equal_to: 0
+      surface_texture:
+    LanePairing:
+      antecessor_lane_id:
+        - refers_to: Lane
+      successor_lane_id:
+        - refers_to: Lane
+LaneBoundary:
+  id:
+    - is_globally_unique:
+  boundary_line:
+    - first_element:
+        width:
+          - is_equal_to: 0.13
+    - first_element:
+        height:
+          - is_equal_to: 0.14
+    - last_element:
+        width:
+          - is_equal_to: 0.13
+    - last_element:
+        height:
+          - is_equal_to: 0.13
+  classification:
+  source_reference:
+  color_description:
+  BoundaryPoint:
+    position:
+    width:
+    height:
+    dash:
+  Classification:
+    type:
+    color:
+    limiting_structure_id:
+      - refers_to: StationaryObject
+LogicalDetectionData:
+  version:
+  header:
+  logical_detection:
+LogicalDetectionDataHeader:
+  logical_detection_time:
+  data_qualifier:
+  number_of_valid_logical_detections:
+    - is_greater_than_or_equal_to: 0
+  sensor_id:
+LogicalDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  position:
+  position_rmse:
+  velocity:
+  velocity_rmse:
+    - is_greater_than_or_equal_to: 0
+  intensity:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  snr:
+  point_target_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  sensor_id:
+  classification:
+  echo_pulse_width:
+    - is_greater_than_or_equal_to: 0
+LogicalLaneBoundary:
+  id:
+    - is_globally_unique:
+  boundary_line:
+  reference_line_id:
+    - refers_to: ReferenceLine
+  physical_boundary_id:
+    - refers_to: LaneBoundary
+  passing_rule:
+  source_reference:
+  LogicalBoundaryPoint:
+    position:
+    s_position:
+    t_position:
+LogicalLane:
+  id:
+    - is_globally_unique:
+  type:
+  source_reference:
+  physical_lane_reference:
+    - refers_to: Lane
+  reference_line_id:
+    - refers_to: ReferenceLine
+  start_s:
+  end_s:
+  move_direction:
+  right_adjacent_lane:
+  left_adjacent_lane:
+  overlapping_lane:
+  right_boundary_id:
+    - refers_to: LogicalLaneBoundary
+  left_boundary_id:
+    - refers_to: LogicalLaneBoundary
+  predecessor_lane:
+  successor_lane:
+  street_name:
+  PhysicalLaneReference:
+    physical_lane_id:
+      - refers_to: Lane
+    start_s:
+    end_s:
+  LaneConnection:
+    other_lane_id:
+      - refers_to: LogicalLane
+    at_begin_of_other_lane:
+  LaneRelation:
+    other_lane_id:
+      - refers_to: LogicalLane
+    start_s:
+    end_s:
+    start_s_other:
+    end_s_other:
+MotionRequest:
+  version:
+  timestamp:
+  motion_request_type:
+  desired_state:
+  desired_trajectory:
+  DesiredState:
+    timestamp:
+    position:
+    orientation:
+    velocity:
+    acceleration:
+  DesiredTrajectory:
+    trajectory_point:
+StationaryObject:
+  id:
+    - is_globally_unique:
+  base:
+  classification:
+  model_reference:
+  source_reference:
+  color_description:
+  Classification:
+    type:
+    material:
+    density:
+    color:
+    emitting_structure_attribute:
+    assigned_lane_id:
+    assigned_lane_percentage:
+    logical_lane_assignment:
+    EmittingStructureAttribute:
+      wavelength_data:
+      emitted_spatial_signal_strength:
+MovingObject:
+  id:
+    - is_globally_unique:
+  base:
+  type:
+  assigned_lane_id:
+  vehicle_attributes:
+    - check_if:
+      - is_equal_to: 2
+        target: this.type
+      do_check:
+      - is_set:
+  vehicle_classification:
+    - check_if:
+      - is_equal_to: 2
+        target: this.type
+      do_check:
+      - is_set:
+  model_reference:
+  future_trajectory:
+  moving_object_classification:
+  source_reference:
+  color_description:
+  pedestrian_attributes:
+    - check_if:
+      - is_equal_to: 3
+        target: this.type
+      do_check:
+      - is_set:
+  VehicleAttributes:
+    driver_id:
+    radius_wheel:
+      - is_greater_than_or_equal_to: 0
+    number_wheels:
+      - is_greater_than_or_equal_to: 1
+    bbcenter_to_rear:
+    bbcenter_to_front:
+    ground_clearance:
+    wheel_data:
+    steering_wheel_angle:
+    WheelData:
+      axle:
+      index:
+      position:
+      wheel_radius:
+      rim_radius:
+      width:
+      orientation:
+      rotation_rate:
+      model_reference:
+      friction_coefficient:
+  MovingObjectClassification:
+    assigned_lane_id:
+    assigned_lane_percentage:
+    logical_lane_assignment:
+  VehicleClassification:
+    type:
+    light_state:
+    has_trailer:
+    trailer_id:
+      - check_if:
+        - is_equal_to: true
+          target: this.has_trailer
+        do_check:
+        - is_set:
+    role:
+    LightState:
+      indicator_state:
+      front_fog_light:
+      rear_fog_light:
+      head_light:
+      high_beam:
+      reversing_light:
+      brake_light_state:
+      license_plate_illumination_rear:
+      emergency_vehicle_illumination:
+      service_vehicle_illumination:
+  PedestrianAttributes:
+    bbcenter_to_root:
+    skeleton_bone:
+    Bone:
+      type:
+      position:
+      orientation:
+      length:
+      missing:
+Occupant:
+  id:
+    - is_globally_unique:
+  classification:
+  source_reference:
+  Classification:
+    is_driver:
+    seat:
+    steering_control:
+ReferenceLine:
+  id:
+    - is_globally_unique:
+  type:
+  poly_line:
+  ReferenceLinePoint:
+    world_position:
+    s_position:
+    t_axis_yaw:
+RoadMarking:
+  id:
+  base:
+  classification:
+  source_reference:
+  color_description:
+  Classification:
+    type:
+    traffic_main_sign_type:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    monochrome_color:
+      - check_if:
+        - is_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_equal_to: 1
+          target: this.monochrome_color
+        do_check:
+        - is_set:
+    value:
+    value_text:
+    assigned_lane_id:
+      - refers_to: Lane
+    is_out_of_service:
+    country:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    country_revision:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    code:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    sub_code:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    logical_lane_assignment:
+DetectedEntityHeader:
+  measurement_time:
+  cycle_counter:
+  data_qualifier:
+SensorData:
+  version:
+  timestamp:
+  host_vehicle_location:
+  host_vehicle_location_rmse:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  sensor_view:
+  last_measurement_time:
+  stationary_object_header:
+  stationary_object:
+  moving_object_header:
+  moving_object:
+  traffic_sign_header:
+  traffic_sign:
+  traffic_light_header:
+  traffic_light:
+  road_marking_header:
+  road_marking:
+  lane_boundary_header:
+  lane_boundary:
+  lane_header:
+  lane:
+  occupant_header:
+  occupant:
+  feature_data:
+  logical_detection_data:
+RadarSpecificObjectData:
+  rcs:
+LidarSpecificObjectData:
+  maximum_measurement_distance_sensor:
+    - is_greater_than_or_equal_to: 0
+  probability:
+    - is_less_than_or_equal_to: 1
+    - is_greater_than_or_equal_to: 0
+  trilateration_status:
+  trend:
+  signalway:
+  Signalway:
+    sender_id:
+    receiver_id:
+SensorView:
+  version:
+  timestamp:
+  sensor_id:
+    - is_globally_unique:
+  mounting_position:
+  mounting_position_rmse:
+  host_vehicle_data:
+  global_ground_truth:
+  host_vehicle_id:
+    - refers_to: 'MovingObject'
+  generic_sensor_view:
+  radar_sensor_view:
+  lidar_sensor_view:
+  camera_sensor_view:
+  ultrasonic_sensor_view:
+GenericSensorView:
+  view_configuration:
+RadarSensorView:
+  view_configuration:
+  reflection:
+  Reflection:
+    signal_strength:
+    time_of_flight:
+    doppler_shift:
+    source_horizontal_angle:
+    source_vertical_angle:
+LidarSensorView:
+  view_configuration:
+  reflection:
+  Reflection:
+    signal_strength:
+    time_of_flight:
+    doppler_shift:
+    normal_to_surface:
+    object_id:
+CameraSensorView:
+  view_configuration:
+  image_data:
+UltrasonicSensorView:
+  view_configuration:
+SensorViewConfiguration:
+  version:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+  range:
+    - is_greater_than_or_equal_to: 0
+  update_cycle_time:
+  update_cycle_offset:
+  simulation_start_time:
+  omit_static_information:
+  generic_sensor_view_configuration:
+  radar_sensor_view_configuration:
+  lidar_sensor_view_configuration:
+  camera_sensor_view_configuration:
+  ultrasonic_sensor_view_configuration:
+GenericSensorViewConfiguration:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+RadarSensorViewConfiguration:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+  number_of_rays_horizontal:
+    - is_greater_than_or_equal_to: 1
+  number_of_rays_vertical:
+    - is_greater_than_or_equal_to: 1
+  max_number_of_interactions:
+    - is_greater_than_or_equal_to: 1
+  emitter_frequency:
+    - is_greater_than_or_equal_to: 0
+  tx_antenna_diagram:
+  rx_antenna_diagram:
+  AntennaDiagramEntry:
+    horizontal_angle:
+    vertical_angle:
+    response:
+LidarSensorViewConfiguration:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+  number_of_rays_horizontal:
+    - is_greater_than_or_equal_to: 1
+  number_of_rays_vertical:
+    - is_greater_than_or_equal_to: 1
+  max_number_of_interactions:
+    - is_greater_than_or_equal_to: 1
+  emitter_frequency:
+    - is_greater_than_or_equal_to: 0
+  num_of_pixels:
+    - is_greater_than_or_equal_to: 1
+  directions:
+  timings:
+CameraSensorViewConfiguration:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+  number_of_pixels_horizontal:
+    - is_greater_than_or_equal_to: 1
+  number_of_pixels_vertical:
+    - is_greater_than_or_equal_to: 1
+  channel_format:
+    - is_greater_than_or_equal_to: 1
+  samples_per_pixel:
+    - is_greater_than_or_equal_to: 1
+  max_number_of_interactions:
+    - is_greater_than_or_equal_to: 1
+  wavelength_data:
+  pixel_order:
+UltrasonicSensorViewConfiguration:
+  sensor_id:
+  mounting_position:
+  mounting_position_rmse:
+  field_of_view_horizontal:
+  field_of_view_vertical:
+StreamingUpdate:
+  version:
+  timestamp:
+  stationary_object_update:
+  moving_object_update:
+  traffic_sign_update:
+  traffic_light_update:
+  environmental_conditions_update:
+  host_vehicle_data_update:
+  obsolete_id:
+TrafficCommand:
+  version:
+  timestamp:
+  traffic_participant_id:
+  action:
+TrafficAction:
+  follow_trajectory_action:
+  follow_path_action:
+  acquire_global_position_action:
+  custom_action:
+  longitudinal_distance_action:
+  lane_offset_action:
+  lateral_distance_action:
+  teleport_action:
+  ActionHeader:
+    action_id:
+  DynamicConstraints:
+    max_acceleration:
+    max_deceleration:
+    max_speed:
+  FollowTrajectoryAction:
+    action_header:
+    trajectory_point:
+    constrain_orientation:
+    following_mode:
+  FollowPathAction:
+    action_header:
+    path_point:
+    constrain_orientation:
+    following_mode:
+  AcquireGlobalPositionAction:
+    action_header:
+    position:
+    orientation:
+  LaneChangeAction:
+    action_header:
+    relative_target_lane:
+    dynamics_shape:
+    distance:
+  SpeedAction:
+    action_header:
+    absolute_target_speed:
+    dynamics_shape:
+    distance:
+  AbortActionsAction:
+    action_header:
+  EndActionsAction:
+    action_header:
+  CustomAction:
+    action_header:
+    command:
+    command_type:
+  LongitudinalDistanceAction:
+    action_header:
+    target_traffic_participant_id:
+    distance:
+    freespace:
+    follow:
+    dynamic_constraints:
+  LateralDistanceAction:
+    action_header:
+    target_traffic_participant_id:
+    distance:
+    freespace:
+    follow:
+    dynamic_constraints:
+  LaneOffsetAction:
+    action_header:
+    target_lane_offset:
+    dynamics_shape:
+  TeleportAction:
+    action_header:
+    position:
+    orientation:
+TrafficCommandUpdate:
+  version:
+  timestamp:
+  traffic_participant_id:
+  dismissed_action:
+  DismissedAction:
+    dismissed_action_id:
+    failure_reason:
+TrafficLight:
+  id:
+    - is_globally_unique:
+  base:
+  classification:
+  model_reference:
+  source_reference:
+  color_description:
+  Classification:
+    color:
+    icon:
+    mode:
+    counter:
+      - is_greater_than_or_equal_to: 0
+    assigned_lane_id:
+      - refers_to: Lane
+    is_out_of_service:
+    logical_lane_assignment:
+TrafficSignValue:
+  value:
+  value_unit:
+  text:
+TrafficSign:
+  id:
+    - is_globally_unique:
+  main_sign:
+  supplementary_sign:
+  source_reference:
+  MainSign:
+    base:
+    classification:
+    model_reference:
+    Classification:
+      variability:
+      type:
+      value:
+      direction_scope:
+      assigned_lane_id:
+        - refers_to: Lane
+      vertically_mirrored:
+      is_out_of_service:
+      country:
+      country_revision:
+      code:
+      sub_code:
+      logical_lane_assignment:
+  SupplementarySign:
+    base:
+    classification:
+    model_reference:
+    Classification:
+      variability:
+      type:
+      value:
+      assigned_lane_id:
+        - refers_to: Lane
+      actor:
+      arrow:
+      is_out_of_service:
+      country:
+      country_revision:
+      code:
+      sub_code:
+      logical_lane_assignment:
+      Arrow:
+        lane_id:
+          - refers_to: Lane
+        direction:
+TrafficUpdate:
+  version:
+  timestamp:
+  update:
+  internal_state:
+InterfaceVersion:
+  version_major:
+  version_minor:
+  version_patch:
+  current_interface_version:
