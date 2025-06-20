@@ -1,7 +1,5 @@
 import logging
 
-from lxml import etree
-
 from qc_baselib import Configuration, Result, StatusType, IssueSeverity
 
 from qc_ositrace import constants
@@ -11,11 +9,162 @@ from qc_ositrace.checks.osirules import (
 )
 
 from osi3trace.osi_trace import OSITrace
+import google.protobuf.message
 
 from importlib import resources as impresources
 from . import rulesyml
 
 import yaml
+
+
+def rule_name_from_rule(rule: dict) -> str:
+    def flatten_rule(r):
+        items = []
+        for k, v in r.items():
+            items.append(k.lower())
+            if v is None:
+                continue
+            if isinstance(v, dict):
+                items.extend(flatten_rule(v))
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        items.extend(flatten_rule(item))
+                    elif isinstance(item, list):
+                        items.extend(item)
+                    else:
+                        items.append(item)
+            else:
+                items.append(
+                    v.replace(".", "_").lower()
+                    if isinstance(v, str)
+                    else str(v).replace(".", "_")
+                )
+        return items
+
+    return "_".join(flatten_rule(rule))
+
+
+def register_automatic_rule(
+    rule_map: dict, result: Result, keys: list, items, rules_version
+) -> None:
+    if items is not None:
+        if isinstance(items, dict):
+            for subkey, subitems in items.items():
+                register_automatic_rule(
+                    rule_map, result, keys + [subkey], subitems, rules_version
+                )
+        else:
+            for rule in items:
+                rulename = rule_name_from_rule(rule)
+                rule_uid = result.register_rule(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    emanating_entity="asam.net",
+                    standard="osi",
+                    definition_setting=".".join([str(s) for s in rules_version]),
+                    rule_full_name=f"osirules.{'.'.join(x.lower() for x in keys)}.{rulename}",
+                )
+                rule_osi3_type = f"osi3.{'.'.join(keys[:-1])}"
+                rule_map.setdefault(rule_osi3_type, {})
+                rule_map[rule_osi3_type].setdefault(keys[-1], [])
+                rule_map[rule_osi3_type][keys[-1]].append((rule_uid, rule))
+
+
+def register_automatic_rules(result: Result, rules: dict, rules_version) -> dict:
+    logging.info("Registering Automatic Rules")
+    rule_map = {}
+    for key, items in rules.items():
+        register_automatic_rule(rule_map, result, [key], items, rules_version)
+    logging.info("Regsitered Automatic Rules")
+    return rule_map
+
+
+def check_message_against_rules(
+    message: google.protobuf.message.Message, rule_map: dict, result: Result
+) -> None:
+    field_rules = rule_map.get(message.DESCRIPTOR.full_name, {})
+
+    # Check if required fields are set
+    for field_name, rules in field_rules.items():
+        has_field = message.HasField(field_name)
+        for rule_uid, rule in rules:
+            if "is_set" in rule and not has_field:
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}'.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+
+    # Process other rules for each set field
+    for field, value in message.ListFields():
+        for rule_uid, rule in field_rules.get(field.name, []):
+            if "is_greater_than" in rule and not value > rule["is_greater_than"]:
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater than {rule['is_greater_than']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            if (
+                "is_greater_than_or_equal_to" in rule
+                and not value >= rule["is_greater_than_or_equal_to"]
+            ):
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater or equal to {rule['is_greater_than_or_equal_to']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            if "is_less_than" in rule and not value < rule["is_less_than"]:
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less than {rule['is_less_than']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            if (
+                "is_less_than_or_equal_to" in rule
+                and not value <= rule["is_less_than_or_equal_to"]
+            ):
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less or equal to {rule['is_less_than_or_equal_to']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            if "is_equal_to" in rule and not value == rule["is_equal_to"]:
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not equal to {rule['is_equal_to']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            if "is_different_to" in rule and not value != rule["is_different_to"]:
+                result.register_issue(
+                    checker_bundle_name=constants.BUNDLE_NAME,
+                    checker_id=osirules_constants.CHECKER_ID,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not different from {rule['is_different_to']}.",
+                    level=IssueSeverity.ERROR,
+                    rule_uid=rule_uid,
+                )
+            # TODO: Add remaining rule checks
+
+        # Recursively check nested messages
+        if field.message_type is not None:
+            if isinstance(value, google.protobuf.message.Message):
+                check_message_against_rules(value, rule_map, result)
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, google.protobuf.message.Message):
+                        check_message_against_rules(item, rule_map, result)
 
 
 def run_checks(config: Configuration, result: Result) -> None:
@@ -54,8 +203,9 @@ def run_checks(config: Configuration, result: Result) -> None:
     try:
         with rules_file.open("rt") as file:
             rules = yaml.safe_load(file)
+        rules_version = expected_version or fallback_version
         logging.info(
-            f"Read rules file for version {'.'.join([str(s) for s in (expected_version or fallback_version)])}"
+            f"Read rules file for version {'.'.join([str(s) for s in rules_version])}"
         )
 
     except FileNotFoundError:
@@ -68,9 +218,10 @@ def run_checks(config: Configuration, result: Result) -> None:
         )
         with fallback_rules_file.open("rt") as file:
             rules = yaml.safe_load(file)
-            logging.info(
-                f"Read rules file for version {'.'.join([str(s) for s in fallback_version])}"
-            )
+        rules_version = fallback_version
+        logging.info(
+            f"Read rules file for version {'.'.join([str(s) for s in rules_version])}"
+        )
 
     version_rule_uid = result.register_rule(
         checker_bundle_name=constants.BUNDLE_NAME,
@@ -90,10 +241,12 @@ def run_checks(config: Configuration, result: Result) -> None:
         rule_full_name="osirules.expected_version",
     )
 
-    # TODO: Register rules from rules yml
+    # Register rules from rules yml
+    rule_uid_map = register_automatic_rules(result, rules, rules_version)
 
     logging.info("Executing osirules.version_is_set check")
     logging.info("Executing osirules.expected_version check")
+    logging.info("Executing osirules automatic checks")
 
     for message in trace:
         if not message.HasField("version"):
@@ -120,7 +273,7 @@ def run_checks(config: Configuration, result: Result) -> None:
                 level=IssueSeverity.ERROR,
                 rule_uid=exp_version_rule_uid,
             )
-        # TODO: Check rules from rulesyml
+        check_message_against_rules(message, rule_uid_map, result)
 
     logging.info(
         f"Issues found - {result.get_checker_issue_count(checker_bundle_name=constants.BUNDLE_NAME, checker_id=osirules_constants.CHECKER_ID)}"
