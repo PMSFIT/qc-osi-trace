@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from qc_baselib import Configuration, Result, StatusType, IssueSeverity
 
@@ -196,7 +197,13 @@ def run_checks(config: Configuration, result: Result) -> None:
         logging.info(
             f"No expected version, falling back to {'.'.join([str(s) for s in fallback_version])} rules"
         )
-    rules_file = (
+
+    custom_rules_file = (
+        Path(config.get_config_param("osiRulesFile"))
+        if config.get_config_param("osiRulesFile")
+        else None
+    )
+    rules_file = custom_rules_file or (
         impresources.files(rulesyml)
         / f"osi_{'_'.join(map(str,expected_version or fallback_version))}.yml"
     )
@@ -205,12 +212,12 @@ def run_checks(config: Configuration, result: Result) -> None:
             rules = yaml.safe_load(file)
         rules_version = expected_version or fallback_version
         logging.info(
-            f"Read rules file for version {'.'.join([str(s) for s in rules_version])}"
+            f"Read {'custom' if custom_rules_file else 'standard'} rules file for version {'.'.join([str(s) for s in rules_version])}"
         )
 
     except FileNotFoundError:
         logging.info(
-            f"No rules file for expected version {'.'.join([str(s) for s in expected_version])}, falling back to {'.'.join([str(s) for s in fallback_version])} rules"
+            f"No {'custom' if custom_rules_file else 'standard'} rules file for expected version {'.'.join([str(s) for s in expected_version])}, falling back to standard {'.'.join([str(s) for s in fallback_version])} rules"
         )
         fallback_rules_file = (
             impresources.files(rulesyml)
@@ -220,7 +227,7 @@ def run_checks(config: Configuration, result: Result) -> None:
             rules = yaml.safe_load(file)
         rules_version = fallback_version
         logging.info(
-            f"Read rules file for version {'.'.join([str(s) for s in rules_version])}"
+            f"Read standard rules file for version {'.'.join([str(s) for s in rules_version])}"
         )
 
     version_rule_uid = result.register_rule(
