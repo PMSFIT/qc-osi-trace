@@ -16,12 +16,15 @@ def create_test_config(
     target_file_path: str,
     target_file_type: str,
     target_file_version: Optional[str] = None,
+    target_file_rules: Optional[str] = None,
 ):
     test_config = Configuration()
     test_config.set_config_param(name="InputFile", value=target_file_path)
     test_config.set_config_param(name="osiType", value=target_file_type)
     if target_file_version is not None:
         test_config.set_config_param(name="osiVersion", value=target_file_version)
+    if target_file_rules is not None:
+        test_config.set_config_param(name="osiRulesFile", value=target_file_rules)
     test_config.register_checker_bundle(checker_bundle_name=constants.BUNDLE_NAME)
     test_config.set_checker_bundle_param(
         checker_bundle_name=constants.BUNDLE_NAME,
