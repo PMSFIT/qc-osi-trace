@@ -49,6 +49,12 @@ def args_entrypoint() -> argparse.Namespace:
         help="Path to the output result file.",
     )
 
+    parser.add_argument(
+        "--output_config",
+        type=pathlib.Path,
+        help="Path to save the configuration after running the checks.",
+    )
+
     return parser.parse_args()
 
 
@@ -86,6 +92,7 @@ def main():
     config = Configuration()
     if args.default_config:
         logging.info("Using default configuration")
+        config.register_checker_bundle(checker_bundle_name=constants.BUNDLE_NAME)
     else:
         config.load_from_file(xml_file_path=args.config_path)
         logging.info("Configuration loaded from %s", args.config_path)
@@ -118,13 +125,22 @@ def main():
 
     result = run_checker_bundle(config=config)
 
-    logging.info("Writing results to file")
+    if config.get_checker_bundle_param(
+        checker_bundle_name=constants.BUNDLE_NAME, param_name="resultFile"
+    ):
+        logging.info("Writing results to file")
 
-    result.write_to_file(
-        config.get_checker_bundle_param(
-            checker_bundle_name=constants.BUNDLE_NAME, param_name="resultFile"
+        result.write_to_file(
+            config.get_checker_bundle_param(
+                checker_bundle_name=constants.BUNDLE_NAME, param_name="resultFile"
+            )
         )
-    )
+    else:
+        logging.info("No result file specified, results will not be written to file")
+
+    if args.output_config:
+        logging.info("Writing configuration to file: %s", args.output_config)
+        config.write_to_file(args.output_config)
 
     logging.info("Done")
 
