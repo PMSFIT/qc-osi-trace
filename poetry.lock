@@ -140,6 +140,18 @@ files = [
 ]
 
 [[package]]
+name = "iso3166"
+version = "2.1.1"
+description = "Self-contained ISO 3166-1 country definitions."
+optional = false
+python-versions = ">=3.6"
+groups = ["main"]
+files = [
+    {file = "iso3166-2.1.1-py3-none-any.whl", hash = "sha256:263660b36f8471c42acd1ff673d28a3715edbce7d24b1550d0cf010f6816c47f"},
+    {file = "iso3166-2.1.1.tar.gz", hash = "sha256:fcd551b8dda66b44e9f9e6d6bbbee3a1145a22447c0a556e5d0fb1ad1e491719"},
+]
+
+[[package]]
 name = "lxml"
 version = "5.4.0"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -725,4 +737,4 @@ typing-extensions = ">=4.12.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "9b633ef62fae98452377270bb39109e0ff99d8ecab6adc828d0d0d856245823e"
+content-hash = "b5ab119aafab27bfa5624ce9bf7ae544a2ed0f4d373c9a3a7c715d395e0877ea"
