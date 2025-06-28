@@ -98,6 +98,37 @@ def record_message_ids(
                         record_message_ids(item, id_message_map)
 
 
+def evaluate_rule_condition(
+    message: google.protobuf.message.Message, field_name: str, rule: dict
+) -> bool:
+    if not message.HasField(field_name):
+        return False
+    value = getattr(message, field_name)
+    if "is_set" in rule:
+        return True
+    if "is_greater_than" in rule and value > rule["is_greater_than"]:
+        return True
+    if (
+        "is_greater_than_or_equal_to" in rule
+        and value >= rule["is_greater_than_or_equal_to"]
+    ):
+        return True
+    if "is_less_than" in rule and value < rule["is_less_than"]:
+        return True
+    if "is_less_than_or_equal_to" in rule and value <= rule["is_less_than_or_equal_to"]:
+        return True
+    if "is_equal_to" in rule and value == rule["is_equal_to"]:
+        return True
+    if "is_different_to" in rule and value != rule["is_different_to"]:
+        return True
+    if "is_iso_country_code" in rule and value >= 0 and value <= 999:
+        return True
+    if "is_globally_unique" in rule or "refers_to" in rule or "check_if" in rule:
+        # Not supported within check_if, so we return False
+        return False
+    return False
+
+
 def check_message_against_rules(
     message: google.protobuf.message.Message,
     rule_map: dict,
@@ -120,6 +151,30 @@ def check_message_against_rules(
                     level=IssueSeverity.ERROR,
                     rule_uid=rule_uid,
                 )
+            if (
+                "check_if" in rule
+                and "do_check" in rule
+                and "is_set" in rule["do_check"][0]
+            ):
+                (target, target_field_name) = rule["check_if"][0]["target"].split(".")
+                if target != "this":
+                    logging.warning(
+                        f"Message {index} at {time}: 'check_if' rule for field '{field_name}' in message '{message.DESCRIPTOR.full_name}' has a target that is not 'this': {target}. Ignoring rule."
+                    )
+                else:
+                    if (
+                        evaluate_rule_condition(
+                            message, target_field_name, rule["check_if"][0]
+                        )
+                        and not has_field
+                    ):
+                        result.register_issue(
+                            checker_bundle_name=constants.BUNDLE_NAME,
+                            checker_id=osirules_constants.CHECKER_ID,
+                            description=f"Message {index} at {time}: Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}'.",
+                            level=IssueSeverity.ERROR,
+                            rule_uid=rule_uid,
+                        )
 
     # Process other rules for each set field
     for field, value in message.ListFields():
@@ -227,7 +282,6 @@ def check_message_against_rules(
                             level=IssueSeverity.ERROR,
                             rule_uid=rule_uid,
                         )
-            # TODO: Add remaining rule checks
 
         # Recursively check nested messages
         if field.message_type is not None:
