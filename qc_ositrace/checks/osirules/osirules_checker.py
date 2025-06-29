@@ -98,6 +98,33 @@ def record_message_ids(
                         record_message_ids(item, id_message_map)
 
 
+def register_issue(
+    result: Result,
+    message: google.protobuf.message.Message,
+    index: int,
+    time: float | None,
+    rule_uid: str,
+    level: IssueSeverity,
+    description: str,
+) -> None:
+    time_str = f"{time}" if time is not None else "unknown"
+    issue_id = result.register_issue(
+        checker_bundle_name=constants.BUNDLE_NAME,
+        checker_id=osirules_constants.CHECKER_ID,
+        description=f"Message {index} at {time_str}: {description}",
+        level=level,
+        rule_uid=rule_uid,
+    )
+    result.add_file_location(
+        checker_bundle_name=constants.BUNDLE_NAME,
+        checker_id=osirules_constants.CHECKER_ID,
+        issue_id=issue_id,
+        row=index,
+        column=0,
+        description=f"Message {index} at {time_str}: {description}",
+    )
+
+
 def evaluate_rule_condition(
     message: google.protobuf.message.Message, field_name: str, rule: dict
 ) -> bool:
@@ -134,7 +161,7 @@ def check_message_against_rules(
     rule_map: dict,
     id_message_map: dict,
     index: int,
-    time: float,
+    time: float | None,
     result: Result,
 ) -> None:
     field_rules = rule_map.get(message.DESCRIPTOR.full_name, {})
@@ -144,12 +171,14 @@ def check_message_against_rules(
         has_field = message.HasField(field_name)
         for rule_uid, rule in rules:
             if "is_set" in rule and not has_field:
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}'.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}' but should be set.",
                 )
             if (
                 "check_if" in rule
@@ -168,119 +197,143 @@ def check_message_against_rules(
                         )
                         and not has_field
                     ):
-                        result.register_issue(
-                            checker_bundle_name=constants.BUNDLE_NAME,
-                            checker_id=osirules_constants.CHECKER_ID,
-                            description=f"Message {index} at {time}: Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}'.",
-                            level=IssueSeverity.ERROR,
-                            rule_uid=rule_uid,
+                        register_issue(
+                            result,
+                            message,
+                            index,
+                            time,
+                            rule_uid,
+                            IssueSeverity.ERROR,
+                            description=f"Field '{field_name}' is not set in message '{message.DESCRIPTOR.full_name}' but should be set according to 'check_if' rule.",
                         )
 
     # Process other rules for each set field
     for field, value in message.ListFields():
         for rule_uid, rule in field_rules.get(field.name, []):
             if "is_greater_than" in rule and not value > rule["is_greater_than"]:
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater than {rule['is_greater_than']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater than {rule['is_greater_than']}.",
                 )
             if (
                 "is_greater_than_or_equal_to" in rule
                 and not value >= rule["is_greater_than_or_equal_to"]
             ):
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater or equal to {rule['is_greater_than_or_equal_to']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not greater or equal to {rule['is_greater_than_or_equal_to']}.",
                 )
             if "is_less_than" in rule and not value < rule["is_less_than"]:
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less than {rule['is_less_than']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less than {rule['is_less_than']}.",
                 )
             if (
                 "is_less_than_or_equal_to" in rule
                 and not value <= rule["is_less_than_or_equal_to"]
             ):
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less or equal to {rule['is_less_than_or_equal_to']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not less or equal to {rule['is_less_than_or_equal_to']}.",
                 )
             if "is_equal_to" in rule and not value == rule["is_equal_to"]:
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not equal to {rule['is_equal_to']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not equal to {rule['is_equal_to']}.",
                 )
             if "is_different_to" in rule and not value != rule["is_different_to"]:
-                result.register_issue(
-                    checker_bundle_name=constants.BUNDLE_NAME,
-                    checker_id=osirules_constants.CHECKER_ID,
-                    description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not different from {rule['is_different_to']}.",
-                    level=IssueSeverity.ERROR,
-                    rule_uid=rule_uid,
+                register_issue(
+                    result,
+                    message,
+                    index,
+                    time,
+                    rule_uid,
+                    IssueSeverity.ERROR,
+                    description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not different from {rule['is_different_to']}.",
                 )
             if "is_iso_country_code" in rule:
                 if value > 999 or value < 0:
-                    result.register_issue(
-                        checker_bundle_name=constants.BUNDLE_NAME,
-                        checker_id=osirules_constants.CHECKER_ID,
-                        description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not a valid numeric ISO country code (must be between 000 and 999).",
-                        level=IssueSeverity.ERROR,
-                        rule_uid=rule_uid,
+                    register_issue(
+                        result,
+                        message,
+                        index,
+                        time,
+                        rule_uid,
+                        IssueSeverity.ERROR,
+                        description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not a valid numeric ISO country code (must be between 000 and 999).",
                     )
                 if iso3166.countries.get(value, None) is None:
-                    result.register_issue(
-                        checker_bundle_name=constants.BUNDLE_NAME,
-                        checker_id=osirules_constants.CHECKER_ID,
-                        description=f"Message {index} at {time}: Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not a valid numeric ISO country code (not found in ISO 3166).",
-                        level=IssueSeverity.WARNING,
-                        rule_uid=rule_uid,
+                    register_issue(
+                        result,
+                        message,
+                        index,
+                        time,
+                        rule_uid,
+                        IssueSeverity.ERROR,
+                        description=f"Field '{field.name}' value {value} in message '{message.DESCRIPTOR.full_name}' is not a valid numeric ISO country code (not found in ISO 3166).",
                     )
             if "is_globally_unique" in rule:
                 if value.value in id_message_map:
                     existing_message = id_message_map[value.value]
                     if existing_message != message:
-                        result.register_issue(
-                            checker_bundle_name=constants.BUNDLE_NAME,
-                            checker_id=osirules_constants.CHECKER_ID,
-                            description=f"Message {index} at {time}: Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' is not globally unique, already used by different message '{existing_message.DESCRIPTOR.full_name}'.",
-                            level=IssueSeverity.ERROR,
-                            rule_uid=rule_uid,
+                        register_issue(
+                            result,
+                            message,
+                            index,
+                            time,
+                            rule_uid,
+                            IssueSeverity.ERROR,
+                            description=f"Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' is not globally unique, already used by different message '{existing_message.DESCRIPTOR.full_name}'.",
                         )
             if "refers_to" in rule:
                 referred_message = id_message_map.get(value.value, None)
                 if referred_message is None:
-                    result.register_issue(
-                        checker_bundle_name=constants.BUNDLE_NAME,
-                        checker_id=osirules_constants.CHECKER_ID,
-                        description=f"Message {index} at {time}: Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' does not refer to any existing message.",
-                        level=IssueSeverity.ERROR,
-                        rule_uid=rule_uid,
+                    register_issue(
+                        result,
+                        message,
+                        index,
+                        time,
+                        rule_uid,
+                        IssueSeverity.ERROR,
+                        description=f"Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' does not refer to any existing message.",
                     )
                 else:
                     # Check if referred message matches the expected type
                     expected_type = f"""osi3.{rule['refers_to'].strip("'")}"""
                     if referred_message.DESCRIPTOR.full_name != expected_type:
-                        result.register_issue(
-                            checker_bundle_name=constants.BUNDLE_NAME,
-                            checker_id=osirules_constants.CHECKER_ID,
-                            description=f"Message {index} at {time}: Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' refers to message '{referred_message.DESCRIPTOR.full_name}', which does not match the expected type '{expected_type}'.",
-                            level=IssueSeverity.ERROR,
-                            rule_uid=rule_uid,
+                        register_issue(
+                            result,
+                            message,
+                            index,
+                            time,
+                            rule_uid,
+                            IssueSeverity.ERROR,
+                            description=f"Field '{field.name}' value {value.value} in message '{message.DESCRIPTOR.full_name}' refers to message '{referred_message.DESCRIPTOR.full_name}', which does not match the expected type '{expected_type}'.",
                         )
 
         # Recursively check nested messages
@@ -385,13 +438,20 @@ def run_checks(config: Configuration, result: Result) -> None:
     logging.info("Executing osirules automatic checks")
 
     for index, message in enumerate(trace):
+        time = (
+            message.timestamp.seconds + message.timestamp.nanos * 1e-9
+            if hasattr(message, "timestamp") and message.HasField("timestamp")
+            else None
+        )
         if not message.HasField("version"):
-            issue_id = result.register_issue(
-                checker_bundle_name=constants.BUNDLE_NAME,
-                checker_id=osirules_constants.CHECKER_ID,
-                description=f"Message {index}: Version field is not set in top-level message.",
-                level=IssueSeverity.ERROR,
-                rule_uid=version_rule_uid,
+            register_issue(
+                result,
+                message,
+                index,
+                time,
+                version_rule_uid,
+                IssueSeverity.ERROR,
+                description=f"Version field is not set in top-level message.",
             )
         elif (
             expected_version is not None
@@ -402,20 +462,18 @@ def run_checks(config: Configuration, result: Result) -> None:
             )
             != expected_version
         ):
-            issue_id = result.register_issue(
-                checker_bundle_name=constants.BUNDLE_NAME,
-                checker_id=osirules_constants.CHECKER_ID,
-                description=f"Message {index}: Version field value {message.version.version_major}.{message.version.version_minor}.{message.version.version_patch} is not the expected version {'.'.join([str(s) for s in expected_version])}.",
-                level=IssueSeverity.ERROR,
-                rule_uid=exp_version_rule_uid,
+            register_issue(
+                result,
+                message,
+                index,
+                time,
+                exp_version_rule_uid,
+                IssueSeverity.ERROR,
+                description=f"Version field value {message.version.version_major}.{message.version.version_minor}.{message.version.version_patch} is not the expected version {'.'.join([str(s) for s in expected_version])}.",
             )
+
         id_message_map = {}
         record_message_ids(message, id_message_map)
-        time = (
-            message.timestamp.seconds + message.timestamp.nanos * 1e-9
-            if hasattr(message, "timestamp") and message.HasField("timestamp")
-            else 0.0
-        )
         check_message_against_rules(
             message, rule_uid_map, id_message_map, index, time, result
         )
