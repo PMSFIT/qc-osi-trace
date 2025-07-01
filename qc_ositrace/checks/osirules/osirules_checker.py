@@ -362,17 +362,14 @@ def run_checks(config: Configuration, result: Result) -> None:
         [int(s) for s in osirules_constants.OSI_FALLBACK_VERSION.split(".")]
     )
     expected_type_name = config.get_config_param("osiType") or "SensorView"
-    expected_type = OSITrace.map_message_type(expected_type_name)
 
-    trace = OSITrace(
-        config.get_config_param("InputFile"), config.get_config_param("osiType")
-    )
+    trace = OSITrace(config.get_config_param("InputFile"), expected_type_name)
 
     result.register_checker(
         checker_bundle_name=constants.BUNDLE_NAME,
         checker_id=osirules_constants.CHECKER_ID,
         description="Evaluates messages in the trace file against the OSI Rules of the given OSI version to guarantee they are in conformance with the standard OSI rules.",
-        summary=f"Checker validating OSI Rules compliance of messages in a trace file",
+        summary="Checker validating OSI Rules compliance of messages in a trace file",
     )
 
     if expected_version is None:
@@ -451,7 +448,7 @@ def run_checks(config: Configuration, result: Result) -> None:
                 time,
                 version_rule_uid,
                 IssueSeverity.ERROR,
-                description=f"Version field is not set in top-level message.",
+                description="Version field is not set in top-level message.",
             )
         elif (
             expected_version is not None

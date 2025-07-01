@@ -92,6 +92,7 @@ def main():
     config = Configuration()
     if args.default_config:
         logging.info("Using default configuration")
+        config.set_config_param("osiType", "SensorView")
         config.register_checker_bundle(checker_bundle_name=constants.BUNDLE_NAME)
     else:
         config.load_from_file(xml_file_path=args.config_path)
