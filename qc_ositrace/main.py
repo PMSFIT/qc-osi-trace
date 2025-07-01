@@ -92,7 +92,6 @@ def main():
     config = Configuration()
     if args.default_config:
         logging.info("Using default configuration")
-        config.set_config_param("osiType", "SensorView")
         config.register_checker_bundle(checker_bundle_name=constants.BUNDLE_NAME)
     else:
         config.load_from_file(xml_file_path=args.config_path)
@@ -120,6 +119,12 @@ def main():
             checker_bundle_name=constants.BUNDLE_NAME,
             name="resultFile",
             value=str(args.result_file),
+        )
+
+    if config.get_config_param("osiType") is None:
+        config.set_config_param("osiType", "SensorView")
+        logging.warning(
+            "No OSI Type specified, defaulting to SensorView. This may lead to unexpected results if it does not match the actual type."
         )
 
     logging.info("Running OSI Trace checker bundle")

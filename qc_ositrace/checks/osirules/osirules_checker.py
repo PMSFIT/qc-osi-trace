@@ -361,7 +361,7 @@ def run_checks(config: Configuration, result: Result) -> None:
     fallback_version = tuple(
         [int(s) for s in osirules_constants.OSI_FALLBACK_VERSION.split(".")]
     )
-    expected_type_name = config.get_config_param("osiType") or "SensorView"
+    expected_type_name = config.get_config_param("osiType")
 
     trace = OSITrace(config.get_config_param("InputFile"), expected_type_name)
 
