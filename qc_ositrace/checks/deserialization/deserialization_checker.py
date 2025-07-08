@@ -1,7 +1,5 @@
 import logging
 
-from lxml import etree
-
 from qc_baselib import Configuration, Result, StatusType, IssueSeverity
 
 from qc_ositrace import constants
@@ -32,7 +30,7 @@ def run_checks(config: Configuration, result: Result) -> None:
         checker_bundle_name=constants.BUNDLE_NAME,
         checker_id=deserialization_constants.CHECKER_ID,
         description="Evaluates messages in the trace file with the OSI deserialization to guarantee they are in conformance with the basic standard trace file rules.",
-        summary=f"Checker validating basic deserializability of messages in a trace file",
+        summary="Checker validating basic deserializability of messages in a trace file",
     )
 
     deser_rule_uid = result.register_rule(
@@ -76,7 +74,7 @@ def run_checks(config: Configuration, result: Result) -> None:
     logging.info("Executing deserialization.expected_version check")
 
     for message in trace:
-        if not type(message) is expected_type:
+        if type(message) is not expected_type:
             issue_id = result.register_issue(
                 checker_bundle_name=constants.BUNDLE_NAME,
                 checker_id=deserialization_constants.CHECKER_ID,
@@ -88,7 +86,7 @@ def run_checks(config: Configuration, result: Result) -> None:
             issue_id = result.register_issue(
                 checker_bundle_name=constants.BUNDLE_NAME,
                 checker_id=deserialization_constants.CHECKER_ID,
-                description=f"Version field is not set in top-level message.",
+                description="Version field is not set in top-level message.",
                 level=IssueSeverity.ERROR,
                 rule_uid=version_rule_uid,
             )
