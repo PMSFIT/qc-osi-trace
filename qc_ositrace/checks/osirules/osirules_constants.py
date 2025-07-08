@@ -1,0 +1,2 @@
+CHECKER_ID = "osirules_osi"
+OSI_FALLBACK_VERSION = "3.7.0"
